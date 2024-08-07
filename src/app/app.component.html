@@ -1,0 +1,173 @@
+<div id="overlay" *ngIf="showAddTaskForm || showEditTaskForm"></div>
+
+<header>
+  <h1 class="title">Kanban</h1>
+</header>
+
+<div class="board-header">
+  <h2 class="sub-title">To-do Board</h2>
+  <button class="add-button" (click)="showTaskForm()" aria-label="Add Task">+</button>
+</div>
+
+<div class="task-columns">
+  <!-- To-do Column -->
+  <div
+    class="column"
+    id="todo-column"
+    (dragover)="allowDrop($event)"
+    (drop)="dropTask('todo', $event)"
+  >
+    <h2 class="column-title">To-do</h2>
+    <div
+      *ngFor="let task of tasks | filterByColumn: 'todo'"
+      class="task"
+      [ngClass]="{
+        'todo': task.column === 'todo',
+        'in-progress': task.column === 'in-progress',
+        'done': task.column === 'done'
+      }"
+      draggable="true"
+      (dragstart)="startDrag($event, task)"
+      (dragend)="endDrag()"
+    >
+    <div class="task">
+      <div class="task-buttons">
+        <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+        <button class="delete-task" (click)="deleteTask(task)" aria-label="Delete Task">
+          X
+        </button>
+      </div>
+      <div class="task-details">
+        <h3>{{ task.name }}</h3>
+        <p>
+          Due Date: <span class="due-date">{{ task.dueDate }}</span>
+        </p>
+      </div>
+    </div>
+    
+    </div>
+  </div>
+
+  <!-- In Progress Column -->
+  <div
+    class="column"
+    id="in-progress-column"
+    (dragover)="allowDrop($event)"
+    (drop)="dropTask('in-progress', $event)"
+  >
+    <h2 class="column-title">In Progress</h2>
+    <div
+      *ngFor="let task of tasks | filterByColumn: 'in-progress'"
+      class="task"
+      [ngClass]="{
+        'todo': task.column === 'todo',
+        'in-progress': task.column === 'in-progress',
+        'done': task.column === 'done'
+      }"
+      draggable="true"
+      (dragstart)="startDrag($event, task)"
+      (dragend)="endDrag()"
+    >
+    <div class="task">
+      <div class="task-buttons">
+        <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+        <button class="delete-task" (click)="deleteTask(task)" aria-label="Delete Task">
+          X
+        </button>
+      </div>
+      <div class="task-details">
+        <h3>{{ task.name }}</h3>
+        <p>
+          Due Date: <span class="due-date">{{ task.dueDate }}</span>
+        </p>
+      </div>
+    </div>    
+
+    </div>
+  </div>
+
+  <!-- Done Column -->
+  <div
+    class="column"
+    id="done-column"
+    (dragover)="allowDrop($event)"
+    (drop)="dropTask('done', $event)"
+  >
+    <h2 class="column-title">Done</h2>
+    <div
+      *ngFor="let task of tasks | filterByColumn: 'done'"
+      class="task"
+      [ngClass]="{
+        'todo': task.column === 'todo',
+        'in-progress': task.column === 'in-progress',
+        'done': task.column === 'done'
+      }"
+      draggable="true"
+      (dragstart)="startDrag($event, task)"
+      (dragend)="endDrag()"
+    >
+    <div class="task">
+      <div class="task-buttons">
+        <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+        <button class="delete-task" (click)="deleteTask(task)" aria-label="Delete Task">
+          X
+        </button>
+      </div>
+      <div class="task-details">
+        <h3>{{ task.name }}</h3>
+        <p>
+          Due Date: <span class="due-date">{{ task.dueDate }}</span>
+        </p>
+      </div>
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAddTaskForm" id="taskForm" class="task-form">
+  <form (ngSubmit)="addTask()">
+    <div class="form-header">
+      <h1>New To-do</h1>
+      <button type="button" class="close-button" (click)="showAddTaskForm = false" aria-label="Close Form">X</button>
+    </div>
+    <div class="form-group">
+      <input type="text" [(ngModel)]="newTask.name" name="taskName" placeholder="Add a To-do item" required maxlength="50">
+    </div>
+    <div class="form-group">
+      <label for="addDueDate">Due Date:</label><br>
+      <input type="date" id="addDueDate" [(ngModel)]="newTask.dueDate" name="dueDate">
+    </div>
+    <div class="form-group">
+      <button type="submit">Add Task</button>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="showEditTaskForm" id="editForm" class="task-form">
+  <form (ngSubmit)="editCurrentTask()">
+    <div class="form-header">
+      <h1>Edit item</h1>
+      <button type="button" class="close-button" (click)="showEditTaskForm = false" aria-label="Close Form">X</button>
+    </div>
+    <div class="form-group">
+      <input type="text" [(ngModel)]="editTask.name" name="taskName" placeholder="Enter new to-do name" required maxlength="50">
+    </div>
+    <div class="form-group">
+      <label for="editDueDate">Due Date:</label><br>
+      <input type="date" id="editDueDate" [(ngModel)]="editTask.dueDate" name="dueDate">
+    </div>
+    <div class="form-group">
+      <button type="submit">Update</button>
+    </div>
+    <div class="form-group">
+      <button type="button" class="close-form" (click)="showEditTaskForm = false">Cancel</button>
+    </div>
+  </form>
+</div>
