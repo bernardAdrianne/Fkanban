@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Task } from './task.model'
+import { Task } from './task.model';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +20,7 @@ export class AppComponent {
 
   showLoginForm: boolean = true;
   showRegisterForm: boolean = false;
+  showLogoutModal: boolean = false;
 
   loginData = { email: '', password: '' };
   registerData = { username: '', email: '', password: '' };
@@ -38,10 +39,10 @@ export class AppComponent {
   }
 
   login() {
-    // Reset errors
+
     this.loginErrors = { email: '', password: '' };
 
-    // Validate input fields
+
     if (!this.loginData.email) {
       this.loginErrors.email = 'Email is required';
     } else if (!this.validateEmail(this.loginData.email)) {
@@ -52,23 +53,23 @@ export class AppComponent {
       this.loginErrors.password = 'Password is required';
     }
 
-    // Check for errors and return if any
+
     if (this.loginErrors.email || this.loginErrors.password) {
       return;
     }
 
-    // Simulate login process
     console.log('Logging in:', this.loginData);
     this.isLoggedIn = true;
     this.showLoginForm = false;
     this.showRegisterForm = false;
+
+    this.loginData = { email: '', password: ''};
   }
 
   register() {
-    // Reset errors
+
     this.registerErrors = { username: '', email: '', password: '' };
 
-    // Validate input fields
     if (!this.registerData.username) {
       this.registerErrors.username = 'Username is required';
     }
@@ -85,7 +86,6 @@ export class AppComponent {
       this.registerErrors.password = 'Password must be at least 6 characters';
     }
 
-    // Check for errors and return if any
     if (
       this.registerErrors.username ||
       this.registerErrors.email ||
@@ -94,10 +94,11 @@ export class AppComponent {
       return;
     }
 
-    // Simulate registration process
     console.log('Registering:', this.registerData);
     this.showRegisterForm = false;
     this.showLoginForm = true;
+
+    this.registerData = { username: '', email: '', password: '' };
   }
 
   validateEmail(email: string): boolean {
@@ -154,6 +155,10 @@ export class AppComponent {
       this.showEditTaskForm = false;
     }
   }
+  
+  getTaskCount(column: string): number {
+    return this.tasks.filter(task => task.column === column).length;
+  }
 
   showTaskForm() {
     this.showAddTaskForm = true;
@@ -196,7 +201,23 @@ export class AppComponent {
   }
 
   logout() {
+    this.showLogoutModal = true;
+  }
+
+  closeLogoutModal() {
+    this.showLogoutModal = false;
+  }
+
+  confirmLogout() {
+    this.showLogoutModal = false;
     this.isLoggedIn = false;
-    this.router.navigate(['/login']);
+    this.showLoginForm = true;
+    this.showRegisterForm = false;
+    console.log('Logging out...');
+
+    this.loginData = { email: '', password: '' };
+    this.registerData = { username: '', email: '', password: '' };
+
+    console.log('Logging out...');
   }
 }
