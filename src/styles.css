@@ -1,10 +1,441 @@
 body {
-    margin: 0;
-    padding: 0;
-    border: border-box;
-    font-family: Arial, sans-serif;
-    background: #282828;
-    /*color: #333; */
-    height: 100%;
-  }
-  
+  margin: 0;
+  padding: 0;
+  border: border-box;
+  font-family: Arial, sans-serif;
+  background: #282828;
+  height: 100%;
+}
+
+/* Header Styles */
+header {
+  background-color: #141414;
+  padding: 12px 20px;
+  color: #ffffff;
+  border-bottom: 1px solid #212121;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  margin-left: 50px;
+}
+
+/* Board Header Styles */
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 20px;
+  margin-left: 65px;
+}
+
+.sub-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+  margin-right: 1600px;
+  text-align: left;
+}
+
+/* Add Button Styles */
+.add-button {
+  background-color: #3C3C50;
+  color: white;
+  border: 1px solid #3C3C3C;
+  border-radius: 5px;
+  width: 60px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-button:hover {
+  background-color: #3C3C3C;
+}
+
+/* Task Columns Styles */
+.task-columns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.column {
+  flex: 1 0 20%;
+  max-width: 20%;
+  min-width: 200px;
+  margin: 0 10px;
+}
+
+.column-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 5px;
+  text-align: left;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  background-color: white;
+}
+
+/* Dragging Styles */
+.dragging {
+  opacity: 1;
+  border: 2px dashed #666;
+  background-color: #fafafa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.task.dragging h3,
+.task.dragging p {
+  color: #333;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Drag Over Styles */
+.drag-over {
+  border: 2px dashed #aaa;
+}
+
+/* Task Form Styles */
+.task-form {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* Form Header Styles */
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.form-header h1 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.close-button {
+  color: gray;
+  font-size: 14px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: black;
+}
+
+/* Form Group Styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group button,
+.form-group label {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.form-group button {
+  background: black;
+  font-size: 16px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+.form-group button:hover {
+  background: #3C3C3C;
+}
+
+/* Task Container Styles */
+.task {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: border-left 0.3s ease;
+}
+
+/* Task Column Specific Styles */
+.task.todo {
+  border-left: 10px solid #FF2C2C;
+}
+
+.task.in-progress {
+  border-left: 10px solid #F9C74F;
+}
+
+.task.done {
+  border-left: 10px solid #90BE6D;
+}
+
+/* Task Details Styles */
+.task-details {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.task h3 {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 3px;
+  border: none;
+  font-size: 16px;
+  margin-top: 10px;
+  word-wrap: break-word;
+}
+
+.task p {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.due-date {
+  margin-left: 5px;
+}
+
+/* Edit and Delete task button style */
+.edit-task,
+.delete-task {
+  color: #666;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-task ion-icon {
+  font-size: 16px;
+}
+
+.edit-task:hover,
+.delete-task:hover {
+  color: black;
+}
+
+.task-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+  z-index: 1;
+}
+
+/* Overlay Styles */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+/* Active Task Form Styles */
+#taskForm.active,
+#editForm.active {
+  display: block;
+}
+
+/* Darken Background Styles */
+.darken-bg {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Overlay for Forms */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+/* Form Container */
+.auth-form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* Form Header */
+.auth-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.auth-form-header h1 {
+  margin: 0;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #141414;
+  flex-grow: 1;
+}
+
+.auth-form-header button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: gray;
+  transition: color 0.2s;
+}
+
+.auth-form-header button:hover {
+  color: #141414;
+}
+
+/* Form Group */
+.auth-form-group {
+  margin-bottom: 15px;
+}
+
+.auth-form-group label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 5px;
+  color: #141414;
+  box-sizing: border-box;
+}
+
+.auth-form-group input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  transition: border-color 0.3s;
+  margin: 0 auto;
+  display: block;
+}
+
+.auth-form-group input:focus {
+  border-color: #141414;
+  outline: none;
+}
+
+
+/* Submit Button */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #141414;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #3C3C3C;
+}
+
+/* Links */
+.auth-form-container p {
+  margin-top: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.auth-form-container p a {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.auth-form-container p a:hover {
+  text-decoration: underline;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Error Input Style */
+.auth-form-group input.input-error {
+  border: 1.5px solid #C30010;
+}
+
+/* Normal Input Style on Focus */
+.auth-form-group input.focused {
+  border: 1.5px solid #141414;
+}
+
+/* Normal Input Style */
+.auth-form-group input {
+  border: 1px solid gray;
+}
