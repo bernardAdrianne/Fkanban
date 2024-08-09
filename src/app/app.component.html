@@ -61,14 +61,18 @@
 
 <!-- Task Manager -->
 <div *ngIf="isLoggedIn">
-  <header>
+  <header >
+    <div class="header-left">
     <h1 class="title">Kanban</h1>
     <button *ngIf="isLoggedIn" (click)="logout()" class="logout-button">Logout</button>
+    </div>
+    <div class="header-right">
+    <button class="add-button" (click)="showTaskForm()" aria-label="Add Task">+</button>
+    </div>
   </header>
   
   <div class="board-header">
     <h2 class="sub-title">To-do Board</h2>
-    <button class="add-button" (click)="showTaskForm()" aria-label="Add Task">+</button>
   </div>
   
   <div class="task-columns">
@@ -76,10 +80,14 @@
     <div
       class="column"
       id="todo-column"
+      [ngClass]="{'with-tasks': hasTasks('todo')}"
       (dragover)="allowDrop($event)"
       (drop)="dropTask('todo', $event)"
     >
-      <h2 class="column-title">To-do  <span class="task-count">{{ getTaskCount('todo') }}</span></h2>
+      <h2 class="column-title"
+        [ngClass]="{ 'no-tasks': !hasTasks('todo') }" >
+        To-do  <span class="todo-task-count">{{ getTaskCount('todo') }}</span>
+      </h2>
       <div
         *ngFor="let task of tasks | filterByColumn: 'todo'"
         class="task"
@@ -102,7 +110,7 @@
           </button>
         </div>
         <div class="task-details">
-          <h3>{{ task.name }}</h3>
+          <p class="task-name">{{ task.name }}</p>
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
           </p>
@@ -116,10 +124,14 @@
     <div
       class="column"
       id="in-progress-column"
+      [ngClass]="{'with-tasks': hasTasks('in-progress')}"
       (dragover)="allowDrop($event)"
       (drop)="dropTask('in-progress', $event)"
     >
-      <h2 class="column-title">In Progress <span class="task-count">{{ getTaskCount('in-progress') }}</span></h2>
+      <h2 class="column-title"
+        [ngClass]="{ 'no-tasks': !hasTasks('in-progress') }">
+        In Progress <span class="inprog-task-count">{{ getTaskCount('in-progress') }}</span>
+      </h2>
       <div
         *ngFor="let task of tasks | filterByColumn: 'in-progress'"
         class="task"
@@ -142,7 +154,7 @@
           </button>
         </div>
         <div class="task-details">
-          <h3>{{ task.name }}</h3>
+          <p class="task-name">{{ task.name }}</p>
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
           </p>
@@ -156,10 +168,14 @@
     <div
       class="column"
       id="done-column"
+      [ngClass]="{'with-tasks': hasTasks('done')}"
       (dragover)="allowDrop($event)"
       (drop)="dropTask('done', $event)"
     >
-      <h2 class="column-title">Done <span class="task-count">{{ getTaskCount('done') }}</span></h2>
+      <h2 class="column-title"
+        [ngClass]="{ 'no-tasks': !hasTasks('done') }">
+        Done <span class="done-task-count">{{ getTaskCount('done') }}</span>
+      </h2>
       <div
         *ngFor="let task of tasks | filterByColumn: 'done'"
         class="task"
@@ -182,7 +198,7 @@
           </button>
         </div>
         <div class="task-details">
-          <h3>{{ task.name }}</h3>
+          <p class="task-name">{{ task.name }}</p>
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
           </p>

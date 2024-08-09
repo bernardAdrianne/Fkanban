@@ -1,21 +1,34 @@
-body {
+html, body {
   margin: 0;
   padding: 0;
-  border: border-box;
+  box-sizing: border-box;
+  overflow-x: hidden;
   font-family: Arial, sans-serif;
-  background: #282828;
+  background: #F5F5F5;
   height: 100%;
 }
 
+
 /* Header Styles */
-header {
-  background-color: #141414;
-  padding: 12px 20px;
-  color: #ffffff;
-  border-bottom: 1px solid #212121;
+.header-left {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+header {
+  background-color: white;
+  padding: 12px 20px;
+  color: black;
+  border-bottom: 1px solid #212121;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title {
@@ -23,18 +36,19 @@ header {
   font-weight: bold;
   margin: 0;
   margin-left: 50px;
+  margin-right: 20px;
 }
 
 /* Logout Button Style */
 .logout-button {
-  background-color: #141414;;
+  background-color: #3C3C50;
   color: white;
-  border: 1.5px solid white;
+  border: 1px solid #3C3C3C;
   padding: 8px 16px;
   cursor: pointer;
   border-radius: 5px;
   font-size: 16px;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .logout-button:hover {
@@ -96,30 +110,48 @@ header {
   margin-top: 20px;
 }
 
-/* Logout Button */
 .modal-content .logout {
-  background-color: white;
+  background-color: green;
   border: 1px solid green;
-  color: black;
+  color: white;
   padding: 20px;
 }
 
 .modal-content .logout:hover {
-  background-color: green;
-  color: white;
+  background-color: #658354;
+  color: black;
 }
-
-/* Cancel Button */
+ 
 .modal-content .cancel {
-  background-color: green;
+  background-color: white;
   border: 1px solid green;
-  color: white;
+  color: black;
   padding: 20px;
 }
 .modal-content .cancel:hover {
-  background-color: white;
-  border: 1px solid black;
-  color: black;
+  background-color: green;
+  border: 1px solid green;
+  color: white; 
+}
+
+/* Add Button Styles */
+.add-button {
+  background-color: #3C3C50;
+  color: white;
+  border: 1px solid #3C3C3C;
+  border-radius: 5px;
+  width: auto;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-right: 50px;
+}
+
+.add-button:hover {
+  background-color: #3C3C3C;
 }
 
 /* Board Header Styles */
@@ -129,33 +161,16 @@ header {
   justify-content: flex-start;
   margin-top: 20px;
   margin-left: 65px;
+  box-sizing: border-box;
 }
 
 .sub-title {
   font-size: 20px;
   font-weight: bold;
-  color: white;
+  color: black;
   margin: 0;
   margin-right: 1600px;
   text-align: left;
-}
-
-/* Add Button Styles */
-.add-button {
-  background-color: #3C3C50;
-  color: white;
-  border: 1px solid #3C3C3C;
-  border-radius: 5px;
-  width: 60px;
-  height: 30px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add-button:hover {
-  background-color: #3C3C3C;
 }
 
 /* Task Columns Styles */
@@ -164,13 +179,40 @@ header {
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 20px;
+  overflow-x: hidden;
 }
 
 .column {
-  flex: 1 0 20%;
+  flex: 1 1 20%;
   max-width: 20%;
   min-width: 200px;
+  box-sizing: border-box;
   margin: 0 10px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* Column Background Color Styles */
+
+#todo-column.with-tasks {
+  background-color: rgba(255, 235, 235, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#in-progress-column.with-tasks {
+  background-color: rgba(255, 235, 235, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#done-column.with-tasks {
+  background-color: rgba(255, 235, 235, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .column-title {
@@ -181,17 +223,44 @@ header {
   padding: 10px;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #ccc;
   border-radius: 15px;
-  background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.task-count {
+.column-title.no-tasks {
+  background-color: rgba(255, 235, 235, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.todo-task-count,
+.inprog-task-count,
+.done-task-count {
   font-size: 0.9em;
-  color: #777;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.todo-task-count {
+  background-color: #EE6B6E;
+}
+
+.inprog-task-count {
+  background-color: #ECE75F;
+}
+
+.done-task-count {
+  background-color: #83F28F;
 }
 
 /* Dragging Styles */
@@ -287,27 +356,31 @@ header {
 
 /* Task Container Styles */
 .task {
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: #F7FCFE;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   transition: border-left 0.3s ease;
 }
 
 /* Task Column Specific Styles */
 .task.todo {
+  border: .5px solid #CCC;
   border-left: 10px solid #FF2C2C;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .task.in-progress {
+  border: 1px solid #CCC;
   border-left: 10px solid #F9C74F;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .task.done {
+  border: 1px solid #CCC;
   border-left: 10px solid #90BE6D;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 /* Task Details Styles */
@@ -317,11 +390,13 @@ header {
   flex-direction: column;
 }
 
-.task h3 {
+.task .task-name {
   display: block;
   padding: 8px 12px;
   border-radius: 3px;
   border: none;
+  font-weight: 500;
+  color: black;
   font-size: 16px;
   margin-top: 10px;
   word-wrap: break-word;
@@ -347,7 +422,7 @@ header {
   border: none;
   font-size: 14px;
   cursor: pointer;
-  background-color: #fff;
+  background-color: #F7FCFE;
   padding: 5px;
   border-radius: 5px;
   transition: color 0.3s ease;
@@ -495,7 +570,6 @@ button[type="submit"] {
   background-color: #141414;
   color: #fff;
   font-size: 16px;
-  font-weight: bold;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -532,15 +606,39 @@ button[type="submit"]:hover {
 
 /* Error Input Style */
 .auth-form-group input.input-error {
-  border: 1.5px solid #C30010;
+  border: 2px solid #C30010;
 }
 
 /* Normal Input Style on Focus */
 .auth-form-group input.focused {
-  border: 1.5px solid #141414;
+  border: 2px solid #0066CC;
 }
 
 /* Normal Input Style */
 .auth-form-group input {
   border: 1px solid gray;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .column {
+    flex: 1 1 45%;
+    max-width: 45%;
+  }
+
+  .task {
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .column {
+    flex: 1 1 90%;
+    max-width: 90%;
+  }
+
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
 }

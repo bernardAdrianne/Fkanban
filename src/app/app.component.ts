@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Task } from './task.model';
 
@@ -7,7 +7,7 @@ import { Task } from './task.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Kanban';
   tasks: Task[] = [];
   currentTaskId: string | null = null;
@@ -18,7 +18,7 @@ export class AppComponent {
   showEditTaskForm = false;
   isLoggedIn: boolean = false;
 
-  showLoginForm: boolean = true;
+  showLoginForm: boolean = false;
   showRegisterForm: boolean = false;
   showLogoutModal: boolean = false;
 
@@ -28,20 +28,57 @@ export class AppComponent {
   loginErrors = { email: '', password: '' };
   registerErrors = { username: '', email: '', password: '' };
 
-  constructor(private router: Router) {
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.initializeApp();
+  }
+
+  initializeApp() {
     this.checkLoginStatus();
+    if (this.isLoggedIn) {
+      this.loadTasks();
+    } else {
+      this.showLoginForm = true;
+    }
+    this.loadFormData();
   }
 
   checkLoginStatus() {
-    this.isLoggedIn = false;
-    this.showLoginForm = !this.isLoggedIn;
-    this.showRegisterForm = false;
+    this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  }
+
+  loadFormData() {
+    const storedLoginData = localStorage.getItem('loginData');
+    const storedRegisterData = localStorage.getItem('registerData');
+
+    if (storedLoginData) {
+      this.loginData = JSON.parse(storedLoginData);
+    }
+
+    if (storedRegisterData) {
+      this.registerData = JSON.parse(storedRegisterData);
+    }
+  }
+
+  saveFormData() {
+    localStorage.setItem('loginData', JSON.stringify(this.loginData));
+    localStorage.setItem('registerData', JSON.stringify(this.registerData));
+  }
+
+  loadTasks() {
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+      this.tasks = JSON.parse(storedTasks);
+    }
+  }
+
+  saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(this.tasks));
   }
 
   login() {
-
     this.loginErrors = { email: '', password: '' };
-
 
     if (!this.loginData.email) {
       this.loginErrors.email = 'Email is required';
@@ -53,7 +90,6 @@ export class AppComponent {
       this.loginErrors.password = 'Password is required';
     }
 
-
     if (this.loginErrors.email || this.loginErrors.password) {
       return;
     }
@@ -62,12 +98,12 @@ export class AppComponent {
     this.isLoggedIn = true;
     this.showLoginForm = false;
     this.showRegisterForm = false;
-
-    this.loginData = { email: '', password: ''};
+    localStorage.setItem('isLoggedIn', 'true');
+    this.saveFormData();
+    this.loadTasks();
   }
 
   register() {
-
     this.registerErrors = { username: '', email: '', password: '' };
 
     if (!this.registerData.username) {
@@ -97,8 +133,7 @@ export class AppComponent {
     console.log('Registering:', this.registerData);
     this.showRegisterForm = false;
     this.showLoginForm = true;
-
-    this.registerData = { username: '', email: '', password: '' };
+    this.saveFormData();
   }
 
   validateEmail(email: string): boolean {
@@ -130,6 +165,10 @@ export class AppComponent {
     return 'task-' + Date.now();
   }
 
+  hasTasks(column: string): boolean {
+    return this.tasks.some(task => task.column === column);
+  }
+  
   addTask() {
     if (this.newTask.name.trim() === '') {
       alert('Please enter a task name.');
@@ -145,6 +184,7 @@ export class AppComponent {
     this.tasks = [...this.tasks, task];
     this.newTask = { name: '', dueDate: '' };
     this.showAddTaskForm = false;
+    this.saveTasks();
   }
 
   editCurrentTask() {
@@ -153,6 +193,7 @@ export class AppComponent {
       task.name = this.editTask.name;
       task.dueDate = this.editTask.dueDate;
       this.showEditTaskForm = false;
+      this.saveTasks();
     }
   }
   
@@ -173,6 +214,7 @@ export class AppComponent {
 
   deleteTask(task: Task) {
     this.tasks = this.tasks.filter((t) => t.id !== task.id);
+    this.saveTasks();
   }
 
   startDrag(event: DragEvent, task: Task) {
@@ -196,6 +238,7 @@ export class AppComponent {
       if (task) {
         task.column = column;
         this.tasks = [...this.tasks];
+        this.saveTasks();
       }
     }
   }
@@ -216,7 +259,12 @@ export class AppComponent {
     console.log('Logging out...');
 
     this.loginData = { email: '', password: '' };
-    this.registerData = { username: '', email: '', password: '' };
+    this.registerData = { username: '', email: '' , password: '' };
+
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('loginData');
+    localStorage.removeItem('registerData');
+    localStorage.removeItem('tasks');
 
     console.log('Logging out...');
   }
