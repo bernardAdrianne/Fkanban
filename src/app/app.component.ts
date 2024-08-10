@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Task } from './task.model';
 
@@ -16,11 +16,11 @@ export class AppComponent implements OnInit {
   editTask = { name: '', dueDate: '' };
   showAddTaskForm = false;
   showEditTaskForm = false;
+  showLogoutModal: boolean = false;
   isLoggedIn: boolean = false;
 
   showLoginForm: boolean = false;
   showRegisterForm: boolean = false;
-  showLogoutModal: boolean = false;
 
   loginData = { email: '', password: '' };
   registerData = { username: '', email: '', password: '' };
@@ -201,6 +201,13 @@ export class AppComponent implements OnInit {
     return this.tasks.filter(task => task.column === column).length;
   }
 
+  isOverdue(task: Task): boolean {
+    const dueDate = new Date(task.dueDate);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    return dueDate < currentDate;
+  }
+
   showTaskForm() {
     this.showAddTaskForm = true;
   }
@@ -237,6 +244,10 @@ export class AppComponent implements OnInit {
       const task = this.tasks.find((t) => t.id === taskId);
       if (task) {
         task.column = column;
+    
+        if (column === 'done') {
+          task.dueDate = new Date().toISOString().split('T')[0];  
+        }
         this.tasks = [...this.tasks];
         this.saveTasks();
       }
@@ -267,5 +278,17 @@ export class AppComponent implements OnInit {
     localStorage.removeItem('tasks');
 
     console.log('Logging out...');
+  }
+
+
+  handleKeydown(event: KeyboardEvent, currentInput: HTMLInputElement, nextInput: HTMLInputElement | null) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      if (currentInput.value.trim() === '') {
+        this.validateField(currentInput);
+      } else if (nextInput) {
+        nextInput.focus();
+      }
+    }
   }
 }

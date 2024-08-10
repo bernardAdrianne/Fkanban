@@ -1,5 +1,6 @@
 <!-- Overlay for Forms -->
 <div *ngIf="!isLoggedIn && (showLoginForm || showRegisterForm)" id="overlay"></div>
+<div *ngIf="isLoggedIn && (showAddTaskForm || showEditTaskForm)" id="overlay"></div>
 
 <!-- Login Form -->
 <div *ngIf="!isLoggedIn && showLoginForm" class="auth-form-container">
@@ -9,14 +10,16 @@
     </div>
     <div class="auth-form-group">
       <label for="loginEmail">Email:</label>
-      <input type="email" id="loginEmail" [(ngModel)]="loginData.email" name="email" required [ngClass]="{ 'input-error': loginErrors.email }" (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)"/>
+      <input type="email" id="loginEmail" [(ngModel)]="loginData.email" name="email" required [ngClass]="{ 'input-error': loginErrors.email }"
+             (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" (keydown)="handleKeydown($event, loginEmail, loginPassword)" #loginEmail/>
       <div class="error-message" *ngIf="loginErrors.email">
         {{ loginErrors.email }}
       </div>
     </div>
     <div class="auth-form-group">
       <label for="loginPassword">Password:</label>
-      <input type="password" id="loginPassword" [(ngModel)]="loginData.password" name="password" required [ngClass]="{ 'input-error': loginErrors.password }" (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" />
+      <input type="password" id="loginPassword" [(ngModel)]="loginData.password" name="password" required [ngClass]="{ 'input-error': loginErrors.password }"
+             (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" (keydown)="handleKeydown($event, loginPassword, null)" #loginPassword/>
       <div class="error-message" *ngIf="loginErrors.password">
         {{ loginErrors.password }}
       </div>
@@ -34,21 +37,24 @@
     </div>
     <div class="auth-form-group">
       <label for="registerUsername">Username:</label>
-      <input type="text" id="registerUsername" [(ngModel)]="registerData.username" name="username" required [ngClass]="{ 'input-error': registerErrors.username }" (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)"/>
+      <input type="text" id="registerUsername" [(ngModel)]="registerData.username" name="username" required [ngClass]="{ 'input-error': registerErrors.username }"
+             (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" (keydown)="handleKeydown($event, registerUsername, registerEmail)" #registerUsername/>
       <div class="error-message" *ngIf="registerErrors.username">
         {{ registerErrors.username }}
       </div>
     </div>
     <div class="auth-form-group">
       <label for="registerEmail">Email:</label>
-      <input type="email" id="registerEmail" [(ngModel)]="registerData.email" name="email" required [ngClass]="{ 'input-error': registerErrors.email }" (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)"/>
+      <input type="email" id="registerEmail" [(ngModel)]="registerData.email" name="email" required [ngClass]="{ 'input-error': registerErrors.email }"
+             (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" (keydown)="handleKeydown($event, registerEmail, registerPassword)" #registerEmail/>
       <div class="error-message" *ngIf="registerErrors.email">
         {{ registerErrors.email }}
       </div>
     </div>
     <div class="auth-form-group">
       <label for="registerPassword">Password:</label>
-      <input type="password" id="registerPassword" [(ngModel)]="registerData.password" name="password" required [ngClass]="{ 'input-error': registerErrors.password }" (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)"/>
+      <input type="password" id="registerPassword" [(ngModel)]="registerData.password" name="password" required [ngClass]="{ 'input-error': registerErrors.password }"
+             (focus)="handleInputFocus($event)" (blur)="handleInputBlur($event)" (keydown)="handleKeydown($event, registerPassword, null)" #registerPassword/>
       <div class="error-message" *ngIf="registerErrors.password">
         {{ registerErrors.password }}
       </div>
@@ -75,8 +81,9 @@
     <h2 class="sub-title">To-do Board</h2>
   </div>
   
-  <div class="task-columns">
-    <!-- To-do Column -->
+
+    <!-- To-do Column -->  
+    <div class="task-columns">
     <div
       class="column"
       id="todo-column"
@@ -94,12 +101,15 @@
         [ngClass]="{
           'todo': task.column === 'todo',
           'in-progress': task.column === 'in-progress',
-          'done': task.column === 'done'
+          'done': task.column === 'done',
+          'overdue': isOverdue(task) && task.column !== 'done'
         }"
         draggable="true"
         (dragstart)="startDrag($event, task)"
         (dragend)="endDrag()"
       >
+
+      <!-- Task Content -->
       <div class="task">
         <div class="task-buttons">
           <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
@@ -110,9 +120,12 @@
           </button>
         </div>
         <div class="task-details">
-          <p class="task-name">{{ task.name }}</p>
+          <p class="task-name">{{ task.name }}</p>  
+        </div>
+        <div class="due-date-cont">
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
+            <span *ngIf="isOverdue(task) && task.column !== 'done'" class="overdue-text">Overdue!</span>
           </p>
         </div>
       </div>
@@ -138,12 +151,15 @@
         [ngClass]="{
           'todo': task.column === 'todo',
           'in-progress': task.column === 'in-progress',
-          'done': task.column === 'done'
+          'done': task.column === 'done',
+          'overdue': isOverdue(task) && task.column !== 'done'
         }"
         draggable="true"
         (dragstart)="startDrag($event, task)"
         (dragend)="endDrag()"
       >
+
+      <!-- Task Content -->
       <div class="task">
         <div class="task-buttons">
           <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
@@ -155,8 +171,11 @@
         </div>
         <div class="task-details">
           <p class="task-name">{{ task.name }}</p>
+        </div>
+        <div class="due-date-cont">
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
+            <span *ngIf="isOverdue(task) && task.column !== 'done'" class="overdue-text">Overdue!</span>
           </p>
         </div>
       </div>    
@@ -184,13 +203,14 @@
           'in-progress': task.column === 'in-progress',
           'done': task.column === 'done'
         }"
-        draggable="true"
-        (dragstart)="startDrag($event, task)"
-        (dragend)="endDrag()"
+
+        draggable="false" 
       >
+
+      <!-- Task Content -->
       <div class="task">
         <div class="task-buttons">
-          <button class="edit-task" (click)="showEditForm(task)" aria-label="Edit Task">
+          <button class="edit-task" *ngIf="false" aria-label="Edit Task">
             <ion-icon name="create-outline"></ion-icon>
           </button>
           <button class="delete-task" (click)="deleteTask(task)" aria-label="Delete Task">
@@ -199,8 +219,11 @@
         </div>
         <div class="task-details">
           <p class="task-name">{{ task.name }}</p>
+        </div>
+        <div class="due-date-cont">
           <p>
             Due Date: <span class="due-date">{{ task.dueDate }}</span>
+            <span *ngIf="isOverdue(task) && task.column !== 'done'" class="overdue-text">Overdue!</span>
           </p>
         </div>
       </div>
@@ -209,6 +232,7 @@
     </div>
   </div>
   
+  <!-- Add Task Form -->
   <div *ngIf="showAddTaskForm" id="taskForm" class="task-form">
     <form (ngSubmit)="addTask()">
       <div class="form-header">
@@ -228,6 +252,7 @@
     </form>
   </div>
   
+  <!-- Edit Task Form -->
   <div *ngIf="showEditTaskForm" id="editForm" class="task-form">
     <form (ngSubmit)="editCurrentTask()">
       <div class="form-header">
