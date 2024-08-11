@@ -423,6 +423,10 @@ header {
   margin-top: auto;
 }
 
+.due-time {
+  margin-left: 5px;
+}
+
 .task.overdue {
   border: 1px solid #FF2C2C;
 }

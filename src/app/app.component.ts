@@ -12,8 +12,8 @@ export class AppComponent implements OnInit {
   tasks: Task[] = [];
   currentTaskId: string | null = null;
   draggedTask: Task | null = null;
-  newTask = { name: '', dueDate: '' };
-  editTask = { name: '', dueDate: '' };
+  newTask = { name: '', dueDate: '', dueTime: '' };
+  editTask = { name: '', dueDate: '', dueTime: '' };
   showAddTaskForm = false;
   showEditTaskForm = false;
   showLogoutModal: boolean = false;
@@ -178,11 +178,12 @@ export class AppComponent implements OnInit {
       id: this.generateId(),
       name: this.newTask.name,
       dueDate: this.newTask.dueDate,
+      dueTime: this.newTask.dueTime,
       column: 'todo',
     };
     console.log('Adding task:', task);
     this.tasks = [...this.tasks, task];
-    this.newTask = { name: '', dueDate: '' };
+    this.newTask = { name: '', dueDate: '', dueTime: ''};
     this.showAddTaskForm = false;
     this.saveTasks();
   }
@@ -192,6 +193,7 @@ export class AppComponent implements OnInit {
     if (task) {
       task.name = this.editTask.name;
       task.dueDate = this.editTask.dueDate;
+      dueTime: this.editTask.dueTime,
       this.showEditTaskForm = false;
       this.saveTasks();
     }
@@ -216,6 +218,7 @@ export class AppComponent implements OnInit {
     this.currentTaskId = task.id;
     this.editTask.name = task.name;
     this.editTask.dueDate = task.dueDate;
+    this.editTask.dueTime = task.dueTime;
     this.showEditTaskForm = true;
   }
 
